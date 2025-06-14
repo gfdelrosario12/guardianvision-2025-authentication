@@ -17,11 +17,7 @@ public class PasswordArgon2 {
         Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(SALT_LENGTH, HASH_LENGTH, PARALLELISM, MEMORY, ITERATIONS);
         boolean result;
         rawPassword = salt + rawPassword;
-        if (encoder.matches(rawPassword, hash)) {
-            result = true;
-        } else {
-            result = false;
-        }
+        result = encoder.matches(rawPassword, hash);
         return result;
     }
 
@@ -32,10 +28,10 @@ public class PasswordArgon2 {
         String hash = encoder.encode(saltedRawPassword);
         System.out.println("Hash: " + hash);
         Instant end = Instant.now();    // end timer
-        System.out.println(String.format(
-                "Hashing took %s ms",
+        System.out.printf(
+                "Hashing took %s ms%n",
                 ChronoUnit.MILLIS.between(start, end)
-        ));
+        );
         return hash;
     }
 

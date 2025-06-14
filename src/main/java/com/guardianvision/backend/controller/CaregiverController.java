@@ -21,6 +21,11 @@ public class CaregiverController {
         this.service = service;
     }
 
+    @GetMapping("/ping")
+    public String hello() {
+        return "Application is running!";
+    }
+
     @GetMapping
     public ResponseEntity<List<Caregiver>> getAll() {
         return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
@@ -38,6 +43,9 @@ public class CaregiverController {
         String hashed = argon2.encryptPassword(caregiver.getPassword(), salt);
         caregiver.setSalt(salt);
         caregiver.setPassword(hashed);
+        Long lastID = service.getLastInsertedId();
+        String username = service.username(lastID);
+        caregiver.setUsername(username);
         return new ResponseEntity<>(service.create(caregiver), HttpStatus.CREATED);
     }
 

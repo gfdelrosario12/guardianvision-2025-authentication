@@ -1,8 +1,10 @@
 package com.guardianvision.backend.service;
 
+import com.guardianvision.backend.entity.Administrator;
 import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.repository.CaregiverRepository;
 import com.guardianvision.backend.util.PasswordArgon2;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,4 +62,20 @@ public class CaregiverService {
         }).orElse(null);
     }
 
+    public Long getLastInsertedId() {
+        // Assuming your id field is Long and auto-generated
+        // You can fetch the last inserted id by sorting in descending order
+        List<Caregiver> entities = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+
+        if (!entities.isEmpty()) {
+            return entities.get(0).getId() + 1;
+        } else {
+            return 1L;
+        }
+    }
+
+    public String username(Long lastID) {
+        String role = "ADMINISTRATOR";
+        return "AA-" + "C" + "-" + lastID;
+    }
 }

@@ -21,6 +21,11 @@ public class AdministratorController {
         this.service = service;
     }
 
+    @GetMapping("/ping") // Fixed: Unique path
+    public String hello() {
+        return "Application is running!";
+    }
+
     @GetMapping
     public ResponseEntity<List<Administrator>> getAll() {
         return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
@@ -38,19 +43,26 @@ public class AdministratorController {
         String hashed = argon2.encryptPassword(admin.getPassword(), salt);
         admin.setSalt(salt);
         admin.setPassword(hashed);
+        Long lastID = service.getLastInsertedId();
+        String username = service.username(lastID);
+        admin.setUsername(username);
         return new ResponseEntity<>(service.create(admin), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Administrator login) {
         boolean success = service.login(login.getUsername(), login.getPassword());
-        return success ? ResponseEntity.ok("Login successful") : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        return success
+                ? ResponseEntity.ok("Login successful")
+                : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Administrator> update(@PathVariable Long id, @RequestBody Administrator admin) {
         Administrator updated = service.update(id, admin);
-        return updated != null ? new ResponseEntity<>(updated, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return updated != null
+                ? new ResponseEntity<>(updated, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
@@ -67,5 +79,4 @@ public class AdministratorController {
             return ResponseEntity.ok(updated);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Administrator not found");
     }
-
 }
