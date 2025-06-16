@@ -33,13 +33,16 @@ public class CaregiverService {
         return repo.findById(id).map(caregiver -> {
             caregiver.setUsername(updated.getUsername());
             caregiver.setEmail(updated.getEmail());
-            caregiver.setFull_name(updated.getFull_name());
+            caregiver.setFirst_name(updated.getFirst_name());
+            caregiver.setMiddle_name(updated.getMiddle_name());
+            caregiver.setLast_name(updated.getLast_name());
             caregiver.setAddress(updated.getAddress());
             caregiver.setGender(updated.getGender());
             caregiver.setMobile_number(updated.getMobile_number());
             return repo.save(caregiver);
         }).orElse(null);
     }
+
 
     public boolean login(String username, String rawPassword) {
         Caregiver caregiver = repo.findByUsername(username);

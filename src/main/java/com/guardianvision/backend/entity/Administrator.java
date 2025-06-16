@@ -8,16 +8,22 @@ public class Administrator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String username;
     private String email;
     private String password;
     private String salt;
-    private String full_name;
+
+    private String firstName;
+    private String middleName; // Optional
+    private String lastName;
+
     private String address;
     private char gender;
     private int mobile_number;
     private String role;
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -58,12 +64,28 @@ public class Administrator {
         this.salt = salt;
     }
 
-    public String getFull_name() {
-        return full_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getAddress() {

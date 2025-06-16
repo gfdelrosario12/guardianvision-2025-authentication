@@ -43,6 +43,7 @@ public class CaregiverController {
         String hashed = argon2.encryptPassword(caregiver.getPassword(), salt);
         caregiver.setSalt(salt);
         caregiver.setPassword(hashed);
+        caregiver.setRole("CAREGIVER");
         Long lastID = service.getLastInsertedId();
         String username = service.username(lastID);
         caregiver.setUsername(username);

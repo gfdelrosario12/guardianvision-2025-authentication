@@ -55,6 +55,7 @@ public class PatientController {
         String hashed = argon2.encryptPassword(patient.getPassword(), salt);
         patient.setSalt(salt);
         patient.setPassword(hashed);
+        patient.setRole("PATIENT");
         Long lastID = service.getLastInsertedId();
         String username = service.username(lastID);
         patient.setUsername(username);

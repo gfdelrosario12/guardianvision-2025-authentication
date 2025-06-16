@@ -32,10 +32,15 @@ public class AdministratorService {
         return repo.findById(id).map(admin -> {
             admin.setUsername(updated.getUsername());
             admin.setEmail(updated.getEmail());
-            admin.setFull_name(updated.getFull_name());
+
+            admin.setFirstName(updated.getFirstName());
+            admin.setMiddleName(updated.getMiddleName()); // Optional
+            admin.setLastName(updated.getLastName());
+
             admin.setAddress(updated.getAddress());
             admin.setGender(updated.getGender());
             admin.setMobile_number(updated.getMobile_number());
+
             return repo.save(admin);
         }).orElse(null);
     }
@@ -62,19 +67,11 @@ public class AdministratorService {
     }
 
     public Long getLastInsertedId() {
-        // Assuming your id field is Long and auto-generated
-        // You can fetch the last inserted id by sorting in descending order
         List<Administrator> entities = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-
-        if (!entities.isEmpty()) {
-            return entities.get(0).getId() + 1;
-        } else {
-            return 1L;
-        }
+        return entities.isEmpty() ? 1L : entities.get(0).getId() + 1;
     }
 
     public String username(Long lastID) {
-        String role = "ADMINISTRATOR";
-        return "GV-" + "A" + "-" + lastID;
+        return "GV-A-" + lastID;
     }
 }

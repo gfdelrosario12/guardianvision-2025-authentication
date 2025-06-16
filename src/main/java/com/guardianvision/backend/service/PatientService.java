@@ -1,6 +1,5 @@
 package com.guardianvision.backend.service;
 
-import com.guardianvision.backend.entity.Administrator;
 import com.guardianvision.backend.entity.Patient;
 import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.repository.PatientRepository;
@@ -39,10 +38,18 @@ public class PatientService {
         return patientRepo.findById(id).map(patient -> {
             patient.setUsername(updated.getUsername());
             patient.setEmail(updated.getEmail());
-            patient.setFull_name(updated.getFull_name());
+            patient.setFirst_name(updated.getFirst_name());
+            patient.setMiddle_name(updated.getMiddle_name());
+            patient.setLast_name(updated.getLast_name());
             patient.setAddress(updated.getAddress());
             patient.setGender(updated.getGender());
             patient.setMobile_number(updated.getMobile_number());
+            patient.setAge(updated.getAge());
+            patient.setHeight(updated.getHeight());
+            patient.setWeight(updated.getWeight());
+            patient.setEmergencyContactName(updated.getEmergencyContactName());
+            patient.setEmergencyContactDetails(updated.getEmergencyContactDetails());
+            patient.setEmergencyContactAddress(updated.getEmergencyContactAddress());
             return patientRepo.save(patient);
         }).orElse(null);
     }

@@ -21,7 +21,7 @@ public class AdministratorController {
         this.service = service;
     }
 
-    @GetMapping("/ping") // Fixed: Unique path
+    @GetMapping("/ping")
     public String hello() {
         return "Application is running!";
     }
@@ -43,9 +43,12 @@ public class AdministratorController {
         String hashed = argon2.encryptPassword(admin.getPassword(), salt);
         admin.setSalt(salt);
         admin.setPassword(hashed);
+        admin.setRole("ADMIN"); // Set default role
+
         Long lastID = service.getLastInsertedId();
         String username = service.username(lastID);
         admin.setUsername(username);
+
         return new ResponseEntity<>(service.create(admin), HttpStatus.CREATED);
     }
 
@@ -75,8 +78,8 @@ public class AdministratorController {
     public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody Map<String, String> body) {
         String newPassword = body.get("newPassword");
         Administrator updated = service.changePassword(id, newPassword);
-        if (updated != null)
-            return ResponseEntity.ok(updated);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Administrator not found");
+        return updated != null
+                ? ResponseEntity.ok(updated)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Administrator not found");
     }
 }

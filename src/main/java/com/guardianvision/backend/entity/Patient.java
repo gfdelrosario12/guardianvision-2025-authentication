@@ -12,11 +12,19 @@ public class Patient {
     private String email;
     private String password;
     private String salt;
-    private String full_name;
+    private String first_name;
+    private String middle_name; // optional
+    private String last_name;
+    private Integer age;
+    private Double height; // in centimeters or your chosen unit
+    private Double weight; // in kilograms or your chosen unit
     private String address;
     private char gender;
     private int mobile_number;
     private String role;
+    private String EmergencyContactName;
+    private String EmergencyContactDetails;
+    private String EmergencyContactAddress;
 
     @ManyToOne
     @JoinColumn(name = "caregiver_id", nullable = false)
@@ -62,13 +70,20 @@ public class Patient {
         this.salt = salt;
     }
 
-    public String getFull_name() {
-        return full_name;
-    }
+    public String getFirst_name() { return first_name; }
+    public void setFirst_name(String first_name) { this.first_name = first_name; }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
-    }
+    public String getMiddle_name() { return middle_name; }
+    public void setMiddle_name(String middle_name) { this.middle_name = middle_name; }
+
+    public String getLast_name() { return last_name; }
+    public void setLast_name(String last_name) { this.last_name = last_name; }
+
+    public Double getHeight() { return height; }
+    public void setHeight(Double height) { this.height = height; }
+
+    public Double getWeight() { return weight; }
+    public void setWeight(Double weight) { this.weight = weight; }
 
     public String getAddress() {
         return address;
@@ -102,11 +117,43 @@ public class Patient {
         this.role = role;
     }
 
+    public String getEmergencyContactName() {
+        return EmergencyContactName;
+    }
+
+    public void setEmergencyContactName(String emergencyContactName) {
+        EmergencyContactName = emergencyContactName;
+    }
+
+    public String getEmergencyContactDetails() {
+        return EmergencyContactDetails;
+    }
+
+    public void setEmergencyContactDetails(String emergencyContactDetails) {
+        EmergencyContactDetails = emergencyContactDetails;
+    }
+
+    public String getEmergencyContactAddress() {
+        return EmergencyContactAddress;
+    }
+
+    public void setEmergencyContactAddress(String emergencyContactAddress) {
+        EmergencyContactAddress = emergencyContactAddress;
+    }
+
     public Caregiver getCaregiver() {
         return caregiver;
     }
 
     public void setCaregiver(Caregiver caregiver) {
         this.caregiver = caregiver;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
