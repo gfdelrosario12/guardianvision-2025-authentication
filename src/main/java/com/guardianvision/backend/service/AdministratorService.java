@@ -77,4 +77,16 @@ public class AdministratorService {
     public Administrator findByUsername(String username) {
         return repo.findByUsername(username);
     }
+
+    public Administrator updateBasicInfo(Long id, Administrator partialAdmin) {
+        return repo.findById(id).map(admin -> {
+            admin.setFirstName(partialAdmin.getFirstName());
+            admin.setMiddleName(partialAdmin.getMiddleName()); // optional
+            admin.setLastName(partialAdmin.getLastName());
+            admin.setEmail(partialAdmin.getEmail());
+            admin.setRole(partialAdmin.getRole());
+            return repo.save(admin);
+        }).orElse(null);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.guardianvision.backend.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -22,5 +23,20 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();
+    }
+
+    public static String getUsernameFromToken(String token) {
+        return getAllClaimsFromToken(token).getSubject();
+    }
+
+    public static String getRoleFromToken(String token) {
+        return (String) getAllClaimsFromToken(token).get("role");
+    }
+
+    private static Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET)
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

@@ -1,7 +1,11 @@
 package com.guardianvision.backend.controller;
 
 import com.guardianvision.backend.entity.Administrator;
+import com.guardianvision.backend.entity.Caregiver;
+import com.guardianvision.backend.entity.Patient;
 import com.guardianvision.backend.service.AdministratorService;
+import com.guardianvision.backend.service.CaregiverService;
+import com.guardianvision.backend.service.PatientService;
 import com.guardianvision.backend.util.JwtUtil;
 import com.guardianvision.backend.util.PasswordArgon2;
 import jakarta.servlet.http.Cookie;
@@ -10,18 +14,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/admins")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+        origins = {"http://localhost:3000", "http://localhost:5173"},
+        allowCredentials = "true"
+)
 public class AdministratorController {
 
-    private final AdministratorService service;
+    private final AdministratorService adminService;
+    private final CaregiverService caregiverService;
+    private final PatientService patientService;
 
-    public AdministratorController(AdministratorService service) {
-        this.service = service;
+    public AdministratorController(
+            AdministratorService adminService,
+            CaregiverService caregiverService,
+            PatientService patientService
+    ) {
+        this.adminService = adminService;
+        this.caregiverService = caregiverService;
+        this.patientService = patientService;
     }
 
     @GetMapping("/ping")
@@ -29,16 +43,7 @@ public class AdministratorController {
         return "Application is running!";
     }
 
-    @GetMapping
-    public ResponseEntity<List<Administrator>> getAll() {
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Administrator> getById(@PathVariable Long id) {
-        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
-    }
-
+    // ✅ Create Administrator
     @PostMapping
     public ResponseEntity<Administrator> create(@RequestBody Administrator admin) {
         PasswordArgon2 argon2 = new PasswordArgon2();
@@ -48,16 +53,17 @@ public class AdministratorController {
         admin.setPassword(hashed);
         admin.setRole("ADMIN");
 
-        Long lastID = service.getLastInsertedId();
-        String username = service.username(lastID);
+        Long lastID = adminService.getLastInsertedId();
+        String username = adminService.username(lastID);
         admin.setUsername(username);
 
-        return new ResponseEntity<>(service.create(admin), HttpStatus.CREATED);
+        return new ResponseEntity<>(adminService.create(admin), HttpStatus.CREATED);
     }
 
+    // ✅ Login and Set Cookie
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Administrator login, HttpServletResponse response) {
-        boolean success = service.login(login.getUsername(), login.getPassword());
+        boolean success = adminService.login(login.getUsername(), login.getPassword());
         if (!success) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Invalid username or password"));
@@ -67,35 +73,106 @@ public class AdministratorController {
 
         Cookie cookie = new Cookie("jwt", token);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // Set to true if using HTTPS
+        cookie.setSecure(false); // Set true in production
         cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60); // 1 day
+        cookie.setMaxAge(24 * 60 * 60);
 
         response.addCookie(cookie);
 
         return ResponseEntity.ok(Map.of("role", "ADMIN"));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Administrator> update(@PathVariable Long id, @RequestBody Administrator admin) {
-        Administrator updated = service.update(id, admin);
-        return updated != null
-                ? new ResponseEntity<>(updated, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    // ✅ Get current admin info
+    @GetMapping("/me")
+    public ResponseEntity<Administrator> getMe(@CookieValue("jwt") String token) {
+        String username = JwtUtil.getUsernameFromToken(token);
+        return ResponseEntity.ok(adminService.findByUsername(username));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    // ✅ Get all users (admin, caregiver, patient)
+    @GetMapping("/users")
+    public ResponseEntity<List<Map<String, Object>>> getAllUsers() {
+        List<Map<String, Object>> users = new ArrayList<>();
+
+        adminService.getAll().forEach(admin -> users.add(Map.of(
+                "id", admin.getId(),
+                "role", "admin",
+                "firstName", admin.getFirstName(),
+                "lastName", admin.getLastName(),
+                "email", admin.getEmail()
+        )));
+
+        caregiverService.getAll().forEach(c -> users.add(Map.of(
+                "id", c.getId(),
+                "role", "caregiver",
+                "firstName", c.getFirstName(),
+                "lastName", c.getLastName(),
+                "email", c.getEmail()
+        )));
+
+        patientService.getAll().forEach(p -> users.add(Map.of(
+                "id", p.getId(),
+                "role", "patient",
+                "firstName", p.getFirst_name(),
+                "lastName", p.getLastName(),
+                "email", p.getEmail()
+        )));
+
+        return ResponseEntity.ok(users);
     }
 
-    @PutMapping("/{id}/change-password")
-    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody Map<String, String> body) {
+    // ✅ Generic update info (name/email)
+    @PutMapping("/users/{role}/{id}")
+    public ResponseEntity<?> updateUser(
+            @PathVariable String role,
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+
+        return switch (role.toLowerCase()) {
+            case "admin" -> ResponseEntity.ok(adminService.updateBasicInfo(id, (Administrator) body));
+            case "caregiver" -> ResponseEntity.ok(caregiverService.updateBasicInfo(id, (Caregiver) body));
+            case "patient" -> ResponseEntity.ok(patientService.updateBasicInfo(id, (Patient) body));
+            default -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid role");
+        };
+    }
+
+    // ✅ Generic password change
+    @PutMapping("/users/{role}/{id}/password")
+    public ResponseEntity<?> changePassword(
+            @PathVariable String role,
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+
         String newPassword = body.get("newPassword");
-        Administrator updated = service.changePassword(id, newPassword);
-        return updated != null
-                ? ResponseEntity.ok(updated)
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Administrator not found");
+
+        switch (role.toLowerCase()) {
+            case "admin":
+                return ResponseEntity.ok(adminService.changePassword(id, newPassword));
+            case "caregiver":
+                return ResponseEntity.ok(caregiverService.changePassword(id, newPassword));
+            case "patient":
+                return ResponseEntity.ok(patientService.changePassword(id, newPassword));
+            default:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid role");
+        }
+    }
+
+    // ✅ Generic delete
+    @DeleteMapping("/users/{role}/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable String role, @PathVariable Long id) {
+        switch (role.toLowerCase()) {
+            case "admin":
+                adminService.delete(id);
+                break;
+            case "caregiver":
+                caregiverService.delete(id);
+                break;
+            case "patient":
+                patientService.delete(id);
+                break;
+            default:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid role");
+        }
+        return ResponseEntity.noContent().build();
     }
 }

@@ -16,7 +16,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/caregivers")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+        origins = {"http://localhost:3000", "http://localhost:5173"},
+        allowCredentials = "true"
+)
 public class CaregiverController {
 
     private final CaregiverService service;
@@ -36,8 +39,8 @@ public class CaregiverController {
         List<Map<String, Object>> simplified = caregivers.stream().map(c -> {
             Map<String, Object> dto = new HashMap<>();
             dto.put("id", c.getId());
-            dto.put("first_name", c.getFirst_name());
-            dto.put("last_name", c.getLast_name());
+            dto.put("first_name", c.getFirstName());
+            dto.put("last_name", c.getLastName());
             return dto;
         }).toList();
         return new ResponseEntity<>(simplified, HttpStatus.OK);

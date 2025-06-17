@@ -17,7 +17,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/patients")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+        origins = {"http://localhost:3000", "http://localhost:5173"},
+        allowCredentials = "true"
+)
 public class PatientController {
 
     private final PatientRepository patientRepo;

@@ -1,5 +1,6 @@
 package com.guardianvision.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,9 +15,14 @@ public class Patient {
     private String email;
     private String password;
     private String salt;
-    private String first_name;
-    private String middle_name; // optional
-    private String last_name;
+    @JsonProperty("firstName")
+    private String firstName;
+
+    @JsonProperty("middleName")
+    private String middleName;
+
+    @JsonProperty("lastName")
+    private String lastName;
     private Integer age;
     private Double height; // in centimeters or your chosen unit
     private Double weight; // in kilograms or your chosen unit
@@ -24,9 +30,14 @@ public class Patient {
     private String gender;
     private String mobile_number;
     private String role;
-    private String EmergencyContactName;
-    private String EmergencyContactDetails;
-    private String EmergencyContactAddress;
+    @JsonProperty("emergency_contact_name")
+    private String emergency_contact_name;
+
+    @JsonProperty("emergency_contact_number")
+    private String emergency_contact_number;
+
+    @JsonProperty("emergency_contact_address")
+    private String emergency_contact_address;
 
     @ManyToOne
     @JoinColumn(name = "caregiver_id", nullable = false)
@@ -78,14 +89,14 @@ public class Patient {
         this.salt = salt;
     }
 
-    public String getFirst_name() { return first_name; }
-    public void setFirst_name(String first_name) { this.first_name = first_name; }
+    public String getFirst_name() { return firstName; }
+    public void setFirst_name(String first_name) { this.firstName = first_name; }
 
-    public String getMiddle_name() { return middle_name; }
-    public void setMiddle_name(String middle_name) { this.middle_name = middle_name; }
+    public String getMiddle_name() { return middleName; }
+    public void setMiddle_name(String middle_name) { this.middleName = middle_name; }
 
-    public String getLast_name() { return last_name; }
-    public void setLast_name(String last_name) { this.last_name = last_name; }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
 
     public Double getHeight() { return height; }
     public void setHeight(Double height) { this.height = height; }
@@ -126,27 +137,27 @@ public class Patient {
     }
 
     public String getEmergencyContactName() {
-        return EmergencyContactName;
+        return emergency_contact_name;
     }
 
     public void setEmergencyContactName(String emergencyContactName) {
-        EmergencyContactName = emergencyContactName;
+        emergency_contact_name = emergencyContactName;
     }
 
     public String getEmergencyContactDetails() {
-        return EmergencyContactDetails;
+        return emergency_contact_number;
     }
 
     public void setEmergencyContactDetails(String emergencyContactDetails) {
-        EmergencyContactDetails = emergencyContactDetails;
+        emergency_contact_number = emergencyContactDetails;
     }
 
     public String getEmergencyContactAddress() {
-        return EmergencyContactAddress;
+        return emergency_contact_address;
     }
 
     public void setEmergencyContactAddress(String emergencyContactAddress) {
-        EmergencyContactAddress = emergencyContactAddress;
+        emergency_contact_address = emergencyContactAddress;
     }
 
     public Caregiver getCaregiver() {

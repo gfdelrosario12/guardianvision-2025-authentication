@@ -11,7 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/outages")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+        origins = {"http://localhost:3000", "http://localhost:5173"},
+        allowCredentials = "true"
+)
 public class OutageController {
     private final OutageService service;
 

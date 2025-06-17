@@ -1,6 +1,5 @@
 package com.guardianvision.backend.service;
 
-import com.guardianvision.backend.entity.Administrator;
 import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.repository.CaregiverRepository;
 import com.guardianvision.backend.util.PasswordArgon2;
@@ -32,9 +31,9 @@ public class CaregiverService {
     public Caregiver update(Long id, Caregiver updated) {
         return repo.findById(id).map(caregiver -> {
             caregiver.setEmail(updated.getEmail());
-            caregiver.setFirst_name(updated.getFirst_name());
-            caregiver.setMiddle_name(updated.getMiddle_name());
-            caregiver.setLast_name(updated.getLast_name());
+            caregiver.setFirstName(updated.getFirstName());
+            caregiver.setMiddleName(updated.getMiddleName());
+            caregiver.setLastName(updated.getLastName());
             caregiver.setAddress(updated.getAddress());
             caregiver.setGender(updated.getGender());
             caregiver.setMobile_number(updated.getMobile_number());
@@ -83,4 +82,18 @@ public class CaregiverService {
     public Caregiver getByUsername(String username) {
         return repo.findByUsername(username);
     }
+
+    public Caregiver updateBasicInfo(Long id, Caregiver updated) {
+        return repo.findById(id).map(caregiver -> {
+            caregiver.setFirstName(updated.getFirstName());
+            caregiver.setMiddleName(updated.getMiddleName());
+            caregiver.setLastName(updated.getLastName());
+            caregiver.setEmail(updated.getEmail());
+            caregiver.setMobile_number(updated.getMobile_number());
+            caregiver.setGender(updated.getGender());
+            caregiver.setAddress(updated.getAddress());
+            return repo.save(caregiver);
+        }).orElse(null);
+    }
+
 }
