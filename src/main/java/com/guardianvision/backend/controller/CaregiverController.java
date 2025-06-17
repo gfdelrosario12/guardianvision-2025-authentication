@@ -2,7 +2,10 @@ package com.guardianvision.backend.controller;
 
 import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.service.CaregiverService;
+import com.guardianvision.backend.util.JwtUtil;
 import com.guardianvision.backend.util.PasswordArgon2;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,10 +64,25 @@ public class CaregiverController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Caregiver login) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody Caregiver login, HttpServletResponse response) {
         boolean success = service.login(login.getUsername(), login.getPassword());
-        return success ? ResponseEntity.ok("Login successful") : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-    }
+        if (!success) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid username or password"));
+        }
+
+        String token = JwtUtil.generateToken(login.getUsername(), "ADMIN");
+
+        Cookie cookie = new Cookie("jwt", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // Set to true if using HTTPS
+        cookie.setPath("/");
+        cookie.setMaxAge(24 * 60 * 60); // 1 day
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(Map.of("role", "CAREGIVER"));    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Caregiver> update(@PathVariable Long id, @RequestBody Caregiver caregiver) {

@@ -73,4 +73,8 @@ public class AdministratorService {
     public String username(Long lastID) {
         return "GV - AA - " + lastID;
     }
+
+    public Administrator findByUsername(String username) {
+        return repo.findByUsername(username);
+    }
 }

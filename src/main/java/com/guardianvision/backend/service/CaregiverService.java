@@ -79,4 +79,8 @@ public class CaregiverService {
     public String username(Long lastID) {
         return "GV - " + "CC" + " - " + lastID;
     }
+
+    public Caregiver getByUsername(String username) {
+        return repo.findByUsername(username);
+    }
 }

@@ -1,5 +1,6 @@
 package com.guardianvision.backend.service;
 
+import com.guardianvision.backend.entity.Administrator;
 import com.guardianvision.backend.entity.Patient;
 import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.repository.PatientRepository;
@@ -100,6 +101,7 @@ public class PatientService {
         } else {
             return 1L;
         }
+
     }
 
     public String username(Long lastID) {
@@ -113,5 +115,9 @@ public class PatientService {
                 .orElseThrow(() -> new RuntimeException("Caregiver not found"));
         patient.setCaregiver(caregiver);
         return patientRepo.save(patient);
+    }
+
+    public Patient getByUsername(String username) {
+        return patientRepo.findByUsername(username);
     }
 }
