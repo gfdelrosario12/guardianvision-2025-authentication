@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/patients")
-@CrossOrigin(origins = "http://localhost:5432")
+@CrossOrigin(origins = "http://localhost:5173")
 public class PatientController {
 
     private final PatientRepository patientRepo;
@@ -49,18 +49,23 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<Patient> create(@RequestParam Long caregiverId, @RequestBody Patient patient) {
+    public ResponseEntity<Patient> create(@RequestBody Patient patient,
+                                          @RequestParam(required = false) Long caregiverId) {
         PasswordArgon2 argon2 = new PasswordArgon2();
         String salt = argon2.generateSalt();
         String hashed = argon2.encryptPassword(patient.getPassword(), salt);
         patient.setSalt(salt);
         patient.setPassword(hashed);
         patient.setRole("PATIENT");
+
         Long lastID = service.getLastInsertedId();
         String username = service.username(lastID);
         patient.setUsername(username);
+
         return new ResponseEntity<>(service.create(patient, caregiverId), HttpStatus.CREATED);
     }
+
+
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Patient login) {

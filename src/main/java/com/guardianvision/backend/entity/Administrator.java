@@ -20,7 +20,7 @@ public class Administrator {
 
     private String address;
     private String gender;
-    private int mobile_number;
+    private String mobile_number;
     private String role;
 
     // Getters and setters
@@ -104,11 +104,11 @@ public class Administrator {
         this.gender = gender;
     }
 
-    public int getMobile_number() {
+    public String getMobile_number() {
         return mobile_number;
     }
 
-    public void setMobile_number(int mobile_number) {
+    public void setMobile_number(String mobile_number) {
         this.mobile_number = mobile_number;
     }
 

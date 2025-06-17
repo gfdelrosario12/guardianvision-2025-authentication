@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +28,18 @@ public class CaregiverController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Caregiver>> getAll() {
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<Map<String, Object>>> getAll() {
+        List<Caregiver> caregivers = service.getAll();
+        List<Map<String, Object>> simplified = caregivers.stream().map(c -> {
+            Map<String, Object> dto = new HashMap<>();
+            dto.put("id", c.getId());
+            dto.put("first_name", c.getFirst_name());
+            dto.put("last_name", c.getLast_name());
+            return dto;
+        }).toList();
+        return new ResponseEntity<>(simplified, HttpStatus.OK);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Caregiver> getById(@PathVariable Long id) {

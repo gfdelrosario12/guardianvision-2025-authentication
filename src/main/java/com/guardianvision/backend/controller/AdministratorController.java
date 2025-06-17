@@ -43,7 +43,7 @@ public class AdministratorController {
         String hashed = argon2.encryptPassword(admin.getPassword(), salt);
         admin.setSalt(salt);
         admin.setPassword(hashed);
-        admin.setRole("ADMIN"); // Set default role
+        admin.setRole("ADMIN");
 
         Long lastID = service.getLastInsertedId();
         String username = service.username(lastID);

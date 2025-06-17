@@ -28,9 +28,24 @@ public class PatientService {
         return patientRepo.findById(id).orElse(null);
     }
 
+    // ✅ Fixed method with caregiverId parameter
     public Patient create(Patient patient, Long caregiverId) {
-        Caregiver caregiver = caregiverRepo.findById(caregiverId).orElseThrow();
-        patient.setCaregiver(caregiver);
+        if (caregiverId != null) {
+            Caregiver caregiver = caregiverRepo.findById(caregiverId)
+                    .orElseThrow(() -> new RuntimeException("Caregiver not found with ID: " + caregiverId));
+            patient.setCaregiver(caregiver);
+        }
+
+        // Generate username and hash password
+        Long newId = getLastInsertedId();
+        String username = username(newId);
+        patient.setUsername(username);
+
+        String salt = PasswordArgon2.generateSalt();
+        String hashedPassword = PasswordArgon2.encryptPassword(patient.getPassword(), salt);
+        patient.setSalt(salt);
+        patient.setPassword(hashedPassword);
+
         return patientRepo.save(patient);
     }
 
@@ -69,20 +84,17 @@ public class PatientService {
     }
 
     public Patient changePassword(Long id, String newPassword) {
-        return patientRepo.findById(id).map(admin -> {
+        return patientRepo.findById(id).map(patient -> {
             String newSalt = PasswordArgon2.generateSalt();
             String newHash = PasswordArgon2.encryptPassword(newPassword, newSalt);
-            admin.setSalt(newSalt);
-            admin.setPassword(newHash);
-            return patientRepo.save(admin);
+            patient.setSalt(newSalt);
+            patient.setPassword(newHash);
+            return patientRepo.save(patient);
         }).orElse(null);
     }
 
     public Long getLastInsertedId() {
-        // Assuming your id field is Long and auto-generated
-        // You can fetch the last inserted id by sorting in descending order
         List<Patient> entities = patientRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-
         if (!entities.isEmpty()) {
             return entities.get(0).getId() + 1;
         } else {
@@ -95,10 +107,11 @@ public class PatientService {
     }
 
     public Patient assignCaregiver(Long patientId, Long caregiverId) {
-        Patient patient = patientRepo.findById(patientId).orElseThrow(() -> new RuntimeException("Patient not found"));
-        Caregiver caregiver = caregiverRepo.findById(caregiverId).orElseThrow(() -> new RuntimeException("Caregiver not found"));
+        Patient patient = patientRepo.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+        Caregiver caregiver = caregiverRepo.findById(caregiverId)
+                .orElseThrow(() -> new RuntimeException("Caregiver not found"));
         patient.setCaregiver(caregiver);
         return patientRepo.save(patient);
     }
-
 }
