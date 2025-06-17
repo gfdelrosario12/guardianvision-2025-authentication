@@ -31,7 +31,6 @@ public class CaregiverService {
 
     public Caregiver update(Long id, Caregiver updated) {
         return repo.findById(id).map(caregiver -> {
-            caregiver.setUsername(updated.getUsername());
             caregiver.setEmail(updated.getEmail());
             caregiver.setFirst_name(updated.getFirst_name());
             caregiver.setMiddle_name(updated.getMiddle_name());
@@ -78,7 +77,6 @@ public class CaregiverService {
     }
 
     public String username(Long lastID) {
-        String role = "ADMINISTRATOR";
-        return "AA-" + "C" + "-" + lastID;
+        return "GV - " + "CC" + " - " + lastID;
     }
 }

@@ -30,7 +30,6 @@ public class AdministratorService {
 
     public Administrator update(Long id, Administrator updated) {
         return repo.findById(id).map(admin -> {
-            admin.setUsername(updated.getUsername());
             admin.setEmail(updated.getEmail());
 
             admin.setFirstName(updated.getFirstName());
@@ -72,6 +71,6 @@ public class AdministratorService {
     }
 
     public String username(Long lastID) {
-        return "GV-A-" + lastID;
+        return "GV - AA - " + lastID;
     }
 }

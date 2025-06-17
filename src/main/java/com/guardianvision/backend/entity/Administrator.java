@@ -19,7 +19,7 @@ public class Administrator {
     private String lastName;
 
     private String address;
-    private char gender;
+    private String gender;
     private int mobile_number;
     private String role;
 
@@ -96,11 +96,11 @@ public class Administrator {
         this.address = address;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 

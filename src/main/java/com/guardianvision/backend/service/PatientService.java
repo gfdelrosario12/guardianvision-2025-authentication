@@ -36,7 +36,6 @@ public class PatientService {
 
     public Patient update(Long id, Patient updated) {
         return patientRepo.findById(id).map(patient -> {
-            patient.setUsername(updated.getUsername());
             patient.setEmail(updated.getEmail());
             patient.setFirst_name(updated.getFirst_name());
             patient.setMiddle_name(updated.getMiddle_name());
@@ -92,7 +91,14 @@ public class PatientService {
     }
 
     public String username(Long lastID) {
-        String role = "ADMINISTRATOR";
-        return "AA-" + "P" + "-" + lastID;
+        return "GV - " + "PT" + " - " + lastID;
     }
+
+    public Patient assignCaregiver(Long patientId, Long caregiverId) {
+        Patient patient = patientRepo.findById(patientId).orElseThrow(() -> new RuntimeException("Patient not found"));
+        Caregiver caregiver = caregiverRepo.findById(caregiverId).orElseThrow(() -> new RuntimeException("Caregiver not found"));
+        patient.setCaregiver(caregiver);
+        return patientRepo.save(patient);
+    }
+
 }

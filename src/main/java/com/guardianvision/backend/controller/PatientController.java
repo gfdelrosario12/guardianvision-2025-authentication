@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/patients")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5432")
 public class PatientController {
 
     private final PatientRepository patientRepo;
@@ -80,11 +80,16 @@ public class PatientController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    public Patient assignCaregiver(Long patientId, Long caregiverId) {
-        Patient patient = patientRepo.findById(patientId).orElseThrow();
-        Caregiver caregiver = caregiverRepo.findById(caregiverId).orElseThrow();
-        patient.setCaregiver(caregiver);
-        return patientRepo.save(patient);
+    @PutMapping("/{patientId}/assign-caregiver/{caregiverId}")
+    public ResponseEntity<Patient> assignCaregiverToPatient(
+            @PathVariable Long patientId,
+            @PathVariable Long caregiverId) {
+        try {
+            Patient updated = service.assignCaregiver(patientId, caregiverId);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PutMapping("/{id}/change-password")

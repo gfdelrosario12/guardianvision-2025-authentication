@@ -2,6 +2,8 @@ package com.guardianvision.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Patient {
 
@@ -19,7 +21,7 @@ public class Patient {
     private Double height; // in centimeters or your chosen unit
     private Double weight; // in kilograms or your chosen unit
     private String address;
-    private char gender;
+    private String gender;
     private int mobile_number;
     private String role;
     private String EmergencyContactName;
@@ -29,6 +31,12 @@ public class Patient {
     @ManyToOne
     @JoinColumn(name = "caregiver_id", nullable = false)
     private Caregiver caregiver;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alerts> alerts;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Outages> outages;
 
     public Long getId() {
         return id;
@@ -93,11 +101,11 @@ public class Patient {
         this.address = address;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
