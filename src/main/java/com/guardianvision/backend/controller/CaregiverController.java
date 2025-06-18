@@ -1,5 +1,6 @@
 package com.guardianvision.backend.controller;
 
+import com.guardianvision.backend.dto.CaregiverDto;
 import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.service.CaregiverService;
 import com.guardianvision.backend.util.JwtUtil;
@@ -48,9 +49,36 @@ public class CaregiverController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Caregiver> getById(@PathVariable Long id) {
-        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getById(@PathVariable Long id) {
+        Caregiver caregiver = service.getById(id); // Use getById, not getDtoById
+        if (caregiver == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Caregiver not found"));
+        }
+
+        Map<String, Object> dto = new HashMap<>();
+        dto.put("id", caregiver.getId());
+        dto.put("username", caregiver.getUsername());
+        dto.put("email", caregiver.getEmail());
+        dto.put("firstName", caregiver.getFirstName());
+        dto.put("middleName", caregiver.getMiddleName());
+        dto.put("lastName", caregiver.getLastName());
+        dto.put("gender", caregiver.getGender());
+        dto.put("mobileNumber", caregiver.getMobile_number());
+        dto.put("address", caregiver.getAddress());
+        dto.put("role", caregiver.getRole());
+
+        // Optional: include assigned patients' IDs or basic info if needed
+        if (caregiver.getPatients() != null) {
+            dto.put("patients", caregiver.getPatients().stream().map(p -> Map.of(
+                    "id", p.getId(),
+                    "firstName", p.getFirst_name(),
+                    "lastName", p.getLastName()
+            )).toList());
+        }
+
+        return ResponseEntity.ok(dto);
     }
+
 
     @PostMapping
     public ResponseEntity<Caregiver> create(@RequestBody Caregiver caregiver) {

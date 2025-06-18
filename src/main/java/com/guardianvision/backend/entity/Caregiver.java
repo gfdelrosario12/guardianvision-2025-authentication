@@ -1,5 +1,6 @@
 package com.guardianvision.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Caregiver {
     private String role;
 
     @OneToMany(mappedBy = "caregiver", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Patient> patients;
 
     public Long getId() {

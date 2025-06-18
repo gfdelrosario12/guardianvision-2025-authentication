@@ -1,5 +1,7 @@
 package com.guardianvision.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -39,8 +41,9 @@ public class Patient {
     @JsonProperty("emergency_contact_address")
     private String emergency_contact_address;
 
-    @ManyToOne
-    @JoinColumn(name = "caregiver_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "caregiver_id")
+    @JsonIgnoreProperties({"patients"}) // This avoids circular reference
     private Caregiver caregiver;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)

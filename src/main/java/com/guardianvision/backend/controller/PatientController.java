@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +45,35 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getById(@PathVariable Long id) {
-        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getById(@PathVariable Long id) {
+        Patient patient = service.getById(id);
+        if (patient == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Patient not found"));
+        }
+
+        Map<String, Object> dto = new HashMap<>();
+        dto.put("id", patient.getId());
+        dto.put("username", patient.getUsername());
+        dto.put("email", patient.getEmail());
+        dto.put("firstName", patient.getFirst_name());
+        dto.put("middleName", patient.getMiddle_name());
+        dto.put("lastName", patient.getLastName());
+        dto.put("age", patient.getAge());
+        dto.put("height", patient.getHeight());
+        dto.put("weight", patient.getWeight());
+        dto.put("address", patient.getAddress());
+        dto.put("gender", patient.getGender());
+        dto.put("mobileNumber", patient.getMobile_number());
+        dto.put("role", patient.getRole());
+        dto.put("emergencyContactName", patient.getEmergencyContactName());
+        dto.put("emergencyContactNumber", patient.getEmergencyContactDetails());
+        dto.put("emergencyContactAddress", patient.getEmergencyContactAddress());
+        dto.put("caregiverId", patient.getCaregiver() != null ? patient.getCaregiver().getId() : null);
+
+
+        return ResponseEntity.ok(dto);
     }
+
 
     @GetMapping("/caregiver/{caregiverId}")
     public ResponseEntity<List<Patient>> getByCaregiver(@PathVariable Long caregiverId) {

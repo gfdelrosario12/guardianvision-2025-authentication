@@ -1,5 +1,7 @@
 package com.guardianvision.backend.service;
 
+import com.guardianvision.backend.dto.CaregiverDto;
+import com.guardianvision.backend.dto.PatientSummaryDto;
 import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.repository.CaregiverRepository;
 import com.guardianvision.backend.util.PasswordArgon2;
@@ -94,6 +96,26 @@ public class CaregiverService {
             caregiver.setAddress(updated.getAddress());
             return repo.save(caregiver);
         }).orElse(null);
+    }
+
+    // In CaregiverService.java
+    public CaregiverDto getDtoById(Long id) {
+        Caregiver caregiver = repo.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+
+        List<PatientSummaryDto> patientDtos = caregiver.getPatients().stream()
+                .map(p -> new PatientSummaryDto(p.getId(), p.getFirst_name(), p.getLastName()))
+                .toList();
+
+        return new CaregiverDto(
+                caregiver.getId(),
+                caregiver.getUsername(),
+                caregiver.getEmail(),
+                caregiver.getFirstName(),
+                caregiver.getMiddleName(),
+                caregiver.getLastName(),
+                caregiver.getAddress(),
+                patientDtos
+        );
     }
 
 }

@@ -91,35 +91,14 @@ public class AdministratorController {
 
     // ✅ Get all users (admin, caregiver, patient)
     @GetMapping("/users")
-    public ResponseEntity<List<Map<String, Object>>> getAllUsers() {
-        List<Map<String, Object>> users = new ArrayList<>();
-
-        adminService.getAll().forEach(admin -> users.add(Map.of(
-                "id", admin.getId(),
-                "role", "admin",
-                "firstName", admin.getFirstName(),
-                "lastName", admin.getLastName(),
-                "email", admin.getEmail()
-        )));
-
-        caregiverService.getAll().forEach(c -> users.add(Map.of(
-                "id", c.getId(),
-                "role", "caregiver",
-                "firstName", c.getFirstName(),
-                "lastName", c.getLastName(),
-                "email", c.getEmail()
-        )));
-
-        patientService.getAll().forEach(p -> users.add(Map.of(
-                "id", p.getId(),
-                "role", "patient",
-                "firstName", p.getFirst_name(),
-                "lastName", p.getLastName(),
-                "email", p.getEmail()
-        )));
-
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Map<String, List<?>>> getAllUsers() {
+        Map<String, List<?>> result = new HashMap<>();
+        result.put("admins", adminService.getAll());
+        result.put("caregivers", caregiverService.getAll());
+        result.put("patients", patientService.getAll());
+        return ResponseEntity.ok(result);
     }
+
 
     // ✅ Generic update info (name/email)
     @PutMapping("/users/{role}/{id}")
