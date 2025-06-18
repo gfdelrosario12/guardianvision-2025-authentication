@@ -23,8 +23,8 @@ public class Caregiver {
     private String role;
 
     @OneToMany(mappedBy = "caregiver", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Patient> patients;
+
 
     public Long getId() {
         return id;
