@@ -34,6 +34,7 @@ public class CaregiverService {
         return repo.findById(id).map(caregiver -> {
             caregiver.setEmail(updated.getEmail());
             caregiver.setFirstName(updated.getFirstName());
+            caregiver.setFirstName(updated.getFirstName());
             caregiver.setMiddleName(updated.getMiddleName());
             caregiver.setLastName(updated.getLastName());
             caregiver.setAddress(updated.getAddress());
@@ -44,11 +45,14 @@ public class CaregiverService {
     }
 
 
-    public boolean login(String username, String rawPassword) {
+    public Caregiver verifyLoginAndReturnUser(String username, String rawPassword) {
         Caregiver caregiver = repo.findByUsername(username);
-        if (caregiver == null) return false;
+        if (caregiver == null) return null;
+
         PasswordArgon2 argon2 = new PasswordArgon2();
-        return argon2.matchPasswords(rawPassword, caregiver.getSalt(), caregiver.getPassword());
+        boolean matches = argon2.matchPasswords(caregiver.getSalt(), rawPassword, caregiver.getPassword());
+
+        return matches ? caregiver : null;
     }
 
     public void delete(Long id) {

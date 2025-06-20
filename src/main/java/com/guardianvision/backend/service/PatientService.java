@@ -64,6 +64,7 @@ public class PatientService {
             patient.setEmergencyContactName(updated.getEmergencyContactName());
             patient.setEmergencyContactDetails(updated.getEmergencyContactDetails());
             patient.setEmergencyContactAddress(updated.getEmergencyContactAddress());
+            patient.setImageUrl(updated.getImageUrl()); // 🔥 Add this line
             return patientRepo.save(patient);
         }).orElse(null);
     }
@@ -72,7 +73,7 @@ public class PatientService {
         Patient patient = patientRepo.findByUsername(username);
         if (patient == null) return false;
         PasswordArgon2 argon2 = new PasswordArgon2();
-        return argon2.matchPasswords(rawPassword, patient.getSalt(), patient.getPassword());
+        return argon2.matchPasswords(patient.getSalt(), rawPassword, patient.getPassword());
     }
 
     public void delete(Long id) {

@@ -15,10 +15,15 @@ public class JwtUtil {
     public static String generateToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
+        claims.put("username", username);
 
+        return generateTokenWithClaims(claims);
+    }
+
+    public static String generateTokenWithClaims(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(username)
+                .setSubject((String) claims.get("username"))  // ✅ FIX HERE
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(SignatureAlgorithm.HS256, SECRET)
@@ -31,6 +36,11 @@ public class JwtUtil {
 
     public static String getRoleFromToken(String token) {
         return (String) getAllClaimsFromToken(token).get("role");
+    }
+
+    public static Long getUserIdFromToken(String token) {
+        Object userId = getAllClaimsFromToken(token).get("userId");
+        return userId != null ? Long.parseLong(userId.toString()) : null;
     }
 
     private static Claims getAllClaimsFromToken(String token) {

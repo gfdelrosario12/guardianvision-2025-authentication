@@ -69,7 +69,7 @@ public class PatientController {
         dto.put("emergencyContactNumber", patient.getEmergencyContactDetails());
         dto.put("emergencyContactAddress", patient.getEmergencyContactAddress());
         dto.put("caregiverId", patient.getCaregiver() != null ? patient.getCaregiver().getId() : null);
-
+        dto.put("imageUrl", patient.getImageUrl());
 
         return ResponseEntity.ok(dto);
     }

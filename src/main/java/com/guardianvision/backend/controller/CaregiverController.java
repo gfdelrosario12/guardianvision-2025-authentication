@@ -29,6 +29,66 @@ public class CaregiverController {
         this.service = service;
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentCaregiver(@CookieValue(value = "jwt", required = false) String token) {
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: No token");
+        }
+
+        String username;
+        try {
+            username = JwtUtil.getUsernameFromToken(token);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+        Caregiver caregiver = service.getByUsername(username);
+        if (caregiver == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Caregiver not found");
+        }
+
+        Map<String, Object> dto = new HashMap<>();
+        dto.put("id", caregiver.getId());
+        dto.put("username", caregiver.getUsername());
+        dto.put("email", caregiver.getEmail());
+        dto.put("firstName", caregiver.getFirstName());
+        dto.put("middleName", caregiver.getMiddleName());
+        dto.put("lastName", caregiver.getLastName());
+        dto.put("gender", caregiver.getGender());
+        dto.put("mobileNumber", caregiver.getMobile_number());
+        dto.put("address", caregiver.getAddress());
+        dto.put("role", caregiver.getRole());
+
+        // 👇 Include full patient info
+        if (caregiver.getPatients() != null) {
+            dto.put("patients", caregiver.getPatients().stream().map(p -> {
+                Map<String, Object> patientDto = new HashMap<>();
+                patientDto.put("id", p.getId());
+                patientDto.put("username", p.getUsername());
+                patientDto.put("email", p.getEmail());
+                patientDto.put("password", p.getPassword());
+                patientDto.put("salt", p.getSalt());
+                patientDto.put("firstName", p.getFirst_name());
+                patientDto.put("middleName", p.getMiddle_name());
+                patientDto.put("lastName", p.getLastName());
+                patientDto.put("age", p.getAge());
+                patientDto.put("height", p.getHeight());
+                patientDto.put("weight", p.getWeight());
+                patientDto.put("address", p.getAddress());
+                patientDto.put("gender", p.getGender());
+                patientDto.put("mobile_number", p.getMobile_number());
+                patientDto.put("role", p.getRole());
+                patientDto.put("emergency_contact_name", p.getEmergencyContactName());
+                patientDto.put("emergency_contact_number", p.getEmergencyContactDetails());
+                patientDto.put("emergency_contact_address", p.getEmergencyContactAddress());
+                patientDto.put("imageUrl", p.getImageUrl());
+                return patientDto;
+            }).toList());
+        }
+
+        return ResponseEntity.ok(dto);
+    }
+
     @GetMapping("/ping")
     public String hello() {
         return "Application is running!";
@@ -96,23 +156,33 @@ public class CaregiverController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Caregiver login, HttpServletResponse response) {
-        boolean success = service.login(login.getUsername(), login.getPassword());
-        if (!success) {
+        System.out.println("LOGIN ATTEMPT");
+        System.out.println(" → Username: " + login.getUsername());
+        System.out.println(" → Password: " + login.getPassword());
+
+        Caregiver caregiver = service.verifyLoginAndReturnUser(login.getUsername(), login.getPassword());
+        if (caregiver == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Invalid username or password"));
         }
 
-        String token = JwtUtil.generateToken(login.getUsername(), "ADMIN");
+        String token = JwtUtil.generateTokenWithClaims(Map.of(
+                "username", caregiver.getUsername(),
+                "role", "CAREGIVER",
+                "userId", caregiver.getId()
+        ));
 
         Cookie cookie = new Cookie("jwt", token);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // Set to true if using HTTPS
+        cookie.setSecure(false); // Set true in production with HTTPS
         cookie.setPath("/");
         cookie.setMaxAge(24 * 60 * 60); // 1 day
 
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(Map.of("role", "CAREGIVER"));    }
+        return ResponseEntity.ok(Map.of("role", "CAREGIVER"));
+    }
+
 
 
     @PutMapping("/{id}")

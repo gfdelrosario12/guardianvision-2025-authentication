@@ -41,6 +41,9 @@ public class Patient {
     @JsonProperty("emergency_contact_address")
     private String emergency_contact_address;
 
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    private String imageUrl;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "caregiver_id")
     @JsonIgnoreProperties({"patients"}) // This avoids circular reference
@@ -177,5 +180,13 @@ public class Patient {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
