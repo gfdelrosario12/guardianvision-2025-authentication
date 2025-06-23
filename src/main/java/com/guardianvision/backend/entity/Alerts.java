@@ -12,9 +12,6 @@ public class Alerts {
     private Long id;
 
     private String message;
-    private String type; // e.g. "FALL", "SOS", etc.
-
-    private String videoUrl;
     private String lastKnownLocation;
     private LocalDateTime timestamp; // or name it: dataSentTime
 
@@ -38,22 +35,6 @@ public class Alerts {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
     }
 
     public String getLastKnownLocation() {

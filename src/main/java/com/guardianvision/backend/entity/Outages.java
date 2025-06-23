@@ -9,9 +9,6 @@ public class Outages {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String reason;
-
     private String videoUrl;
     private String lastKnownLocation;
     private LocalDateTime timestamp;
@@ -27,14 +24,6 @@ public class Outages {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
     }
 
     public String getVideoUrl() {
