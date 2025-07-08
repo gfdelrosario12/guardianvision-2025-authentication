@@ -5,6 +5,7 @@ import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.repository.PatientRepository;
 import com.guardianvision.backend.repository.CaregiverRepository;
 import com.guardianvision.backend.util.PasswordArgon2;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,7 @@ public class PatientService {
         return patientRepo.save(patient);
     }
 
+    @Transactional
     public Patient update(Long id, Patient updated) {
         return patientRepo.findById(id).map(patient -> {
             patient.setEmail(updated.getEmail());

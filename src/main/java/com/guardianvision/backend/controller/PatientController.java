@@ -107,18 +107,20 @@ public class PatientController {
                     .body(Map.of("message", "Invalid username or password"));
         }
 
-        String token = JwtUtil.generateToken(login.getUsername(), "ADMIN");
+        String token = JwtUtil.generateToken(login.getUsername(), "PATIENT");
 
-        Cookie cookie = new Cookie("jwt", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false); // Set to true if using HTTPS
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60); // 1 day
+        // ✅ Use manual Set-Cookie header to support SameSite=None
+        response.setHeader("Set-Cookie",
+                "jwt=" + token +
+                        "; Max-Age=86400" +              // 1 day in seconds
+                        "; Path=/" +
+                        "; HttpOnly" +
+                        "; Secure" +                     // Required with SameSite=None
+                        "; SameSite=None"
+        );
 
-        response.addCookie(cookie);
-
-        return ResponseEntity.ok(Map.of("role", "PATIENT"));    }
-
+        return ResponseEntity.ok(Map.of("role", "PATIENT"));
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Patient> update(@PathVariable Long id, @RequestBody Patient patient) {

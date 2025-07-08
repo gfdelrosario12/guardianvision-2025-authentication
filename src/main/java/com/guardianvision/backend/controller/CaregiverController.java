@@ -156,10 +156,6 @@ public class CaregiverController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Caregiver login, HttpServletResponse response) {
-        System.out.println("LOGIN ATTEMPT");
-        System.out.println(" → Username: " + login.getUsername());
-        System.out.println(" → Password: " + login.getPassword());
-
         Caregiver caregiver = service.verifyLoginAndReturnUser(login.getUsername(), login.getPassword());
         if (caregiver == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -172,18 +168,19 @@ public class CaregiverController {
                 "userId", caregiver.getId()
         ));
 
-        Cookie cookie = new Cookie("jwt", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false); // Set true in production with HTTPS
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60); // 1 day
-
-        response.addCookie(cookie);
+        // ❌ Don't use Cookie object — instead, manually set the header
+        // ✅ Secure + SameSite=None + HttpOnly
+        response.setHeader("Set-Cookie",
+                "jwt=" + token +
+                        "; Max-Age=86400" +
+                        "; Path=/" +
+                        "; HttpOnly" +
+                        "; Secure" +                      // ✅ Required when using SameSite=None
+                        "; SameSite=None"                // ✅ Allow cross-origin cookie
+        );
 
         return ResponseEntity.ok(Map.of("role", "CAREGIVER"));
     }
-
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Caregiver> update(@PathVariable Long id, @RequestBody Caregiver caregiver) {

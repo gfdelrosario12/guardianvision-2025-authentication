@@ -100,7 +100,6 @@ public class AdministratorController {
     }
 
 
-    // ✅ Generic update info (name/email)
     @PutMapping("/users/{role}/{id}")
     public ResponseEntity<?> updateUser(
             @PathVariable String role,
@@ -108,9 +107,33 @@ public class AdministratorController {
             @RequestBody Map<String, String> body) {
 
         return switch (role.toLowerCase()) {
-            case "admin" -> ResponseEntity.ok(adminService.updateBasicInfo(id, (Administrator) body));
-            case "caregiver" -> ResponseEntity.ok(caregiverService.updateBasicInfo(id, (Caregiver) body));
-            case "patient" -> ResponseEntity.ok(patientService.updateBasicInfo(id, (Patient) body));
+            case "admin" -> {
+                Administrator admin = new Administrator();
+                admin.setFirstName(body.get("firstName"));
+                admin.setMiddleName(body.get("middleName"));
+                admin.setLastName(body.get("lastName"));
+                admin.setEmail(body.get("email"));
+                admin.setRole(body.get("role"));
+                yield ResponseEntity.ok(adminService.updateBasicInfo(id, admin));
+            }
+            case "caregiver" -> {
+                Caregiver caregiver = new Caregiver();
+                caregiver.setFirstName(body.get("firstName"));
+                caregiver.setMiddleName(body.get("middleName"));
+                caregiver.setLastName(body.get("lastName"));
+                caregiver.setEmail(body.get("email"));
+                caregiver.setRole(body.get("role"));
+                yield ResponseEntity.ok(caregiverService.updateBasicInfo(id, caregiver));
+            }
+            case "patient" -> {
+                Patient patient = new Patient();
+                patient.setFirst_name(body.get("firstName"));
+                patient.setMiddle_name(body.get("middleName"));
+                patient.setLastName(body.get("lastName"));
+                patient.setEmail(body.get("email"));
+                patient.setRole(body.get("role"));
+                yield ResponseEntity.ok(patientService.updateBasicInfo(id, patient));
+            }
             default -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid role");
         };
     }
