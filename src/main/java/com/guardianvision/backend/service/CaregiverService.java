@@ -5,6 +5,7 @@ import com.guardianvision.backend.dto.PatientSummaryDto;
 import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.repository.CaregiverRepository;
 import com.guardianvision.backend.util.PasswordArgon2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -122,4 +123,12 @@ public class CaregiverService {
         );
     }
 
+    @Autowired
+    private CaregiverRepository caregiverRepository;
+
+    public String getPhoneNumber(Long caregiverId) {
+        return caregiverRepository.findById(caregiverId)
+                .map(Caregiver::getMobile_number)
+                .orElse(null);
+    }
 }

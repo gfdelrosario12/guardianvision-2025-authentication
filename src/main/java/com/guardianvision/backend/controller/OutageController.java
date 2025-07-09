@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/outages")
 @CrossOrigin(
-        origins = {"http://localhost:3000", "http://localhost:5173"},
+        origins = {"http://localhost:3000", "http://localhost:5173", "https://guardian-vision.vercel.app"},
         allowCredentials = "true"
 )
 public class OutageController {

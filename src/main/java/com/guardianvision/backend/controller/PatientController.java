@@ -4,6 +4,7 @@ import com.guardianvision.backend.entity.Patient;
 import com.guardianvision.backend.repository.CaregiverRepository;
 import com.guardianvision.backend.repository.PatientRepository;
 import com.guardianvision.backend.service.PatientService;
+import com.guardianvision.backend.util.JwtCookieUtil;
 import com.guardianvision.backend.util.JwtUtil;
 import com.guardianvision.backend.util.PasswordArgon2;
 import jakarta.servlet.http.Cookie;
@@ -19,7 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/patients")
 @CrossOrigin(
-        origins = {"http://localhost:3000", "http://localhost:5173"},
+        origins = {"http://localhost:3000", "http://localhost:5173", "https://guardian-vision.vercel.app"},
         allowCredentials = "true"
 )
 public class PatientController {
@@ -107,18 +108,9 @@ public class PatientController {
                     .body(Map.of("message", "Invalid username or password"));
         }
 
-        String token = JwtUtil.generateToken(login.getUsername(), "PATIENT");
+        String token = JwtUtil.generateToken(login.getUsername(), "ADMIN");
 
-        // ✅ Use manual Set-Cookie header to support SameSite=None
-        response.setHeader("Set-Cookie",
-                "jwt=" + token +
-                        "; Max-Age=86400" +              // 1 day in seconds
-                        "; Path=/" +
-                        "; HttpOnly" +
-                        "; Secure" +                     // Required with SameSite=None
-                        "; SameSite=None"
-        );
-
+        JwtCookieUtil.setJwtCookie(response, token);
         return ResponseEntity.ok(Map.of("role", "PATIENT"));
     }
 

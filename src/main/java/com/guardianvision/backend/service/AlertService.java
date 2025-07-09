@@ -8,6 +8,7 @@ import com.guardianvision.backend.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -23,7 +24,12 @@ public class AlertService {
     public Alerts create(Long patientId, Alerts alert) {
         Patient patient = patientRepo.findById(patientId).orElseThrow();
         alert.setPatient(patient);
-        alert.setTimestamp(LocalDateTime.now());
+
+        if (alert.getTimestamp() == null) {
+            alert.setTimestamp(OffsetDateTime.now().toString());
+        }
+        // if timestamp is "" (empty string), do nothing (keep it as empty)
+
         return alertRepo.save(alert);
     }
 

@@ -1,8 +1,10 @@
 package com.guardianvision.backend.entity;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 public class Alerts {
@@ -11,9 +13,8 @@ public class Alerts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String message;
     private String lastKnownLocation;
-    private LocalDateTime timestamp; // or name it: dataSentTime
+    private String timestamp;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
@@ -29,14 +30,6 @@ public class Alerts {
         this.id = id;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public String getLastKnownLocation() {
         return lastKnownLocation;
     }
@@ -45,11 +38,11 @@ public class Alerts {
         this.lastKnownLocation = lastKnownLocation;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

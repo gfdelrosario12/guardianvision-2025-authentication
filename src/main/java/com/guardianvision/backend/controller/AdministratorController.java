@@ -6,6 +6,7 @@ import com.guardianvision.backend.entity.Patient;
 import com.guardianvision.backend.service.AdministratorService;
 import com.guardianvision.backend.service.CaregiverService;
 import com.guardianvision.backend.service.PatientService;
+import com.guardianvision.backend.util.JwtCookieUtil;
 import com.guardianvision.backend.util.JwtUtil;
 import com.guardianvision.backend.util.PasswordArgon2;
 import jakarta.servlet.http.Cookie;
@@ -19,7 +20,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/admins")
 @CrossOrigin(
-        origins = {"http://localhost:3000", "http://localhost:5173"},
+        origins = {"http://localhost:3000", "http://localhost:5173", "https://guardian-vision.vercel.app"},
         allowCredentials = "true"
 )
 public class AdministratorController {
@@ -71,13 +72,7 @@ public class AdministratorController {
 
         String token = JwtUtil.generateToken(login.getUsername(), "ADMIN");
 
-        Cookie cookie = new Cookie("jwt", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false); // Set true in production
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60);
-
-        response.addCookie(cookie);
+        JwtCookieUtil.setJwtCookie(response, token);
 
         return ResponseEntity.ok(Map.of("role", "ADMIN"));
     }

@@ -3,6 +3,7 @@ package com.guardianvision.backend.controller;
 import com.guardianvision.backend.dto.CaregiverDto;
 import com.guardianvision.backend.entity.Caregiver;
 import com.guardianvision.backend.service.CaregiverService;
+import com.guardianvision.backend.util.JwtCookieUtil;
 import com.guardianvision.backend.util.JwtUtil;
 import com.guardianvision.backend.util.PasswordArgon2;
 import jakarta.servlet.http.Cookie;
@@ -18,7 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/caregivers")
 @CrossOrigin(
-        origins = {"http://localhost:3000", "http://localhost:5173"},
+        origins = {"http://localhost:3000", "http://localhost:5173", "https://guardian-vision.vercel.app"},
         allowCredentials = "true"
 )
 public class CaregiverController {
@@ -168,16 +169,7 @@ public class CaregiverController {
                 "userId", caregiver.getId()
         ));
 
-        // ❌ Don't use Cookie object — instead, manually set the header
-        // ✅ Secure + SameSite=None + HttpOnly
-        response.setHeader("Set-Cookie",
-                "jwt=" + token +
-                        "; Max-Age=86400" +
-                        "; Path=/" +
-                        "; HttpOnly" +
-                        "; Secure" +                      // ✅ Required when using SameSite=None
-                        "; SameSite=None"                // ✅ Allow cross-origin cookie
-        );
+        JwtCookieUtil.setJwtCookie(response, token);
 
         return ResponseEntity.ok(Map.of("role", "CAREGIVER"));
     }
