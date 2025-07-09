@@ -1,10 +1,10 @@
 package com.guardianvision.backend.controller;
 
 import com.guardianvision.backend.service.S3UploadService;
+import com.guardianvision.backend.service.S3UploadService.PresignedS3Upload;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URISyntaxException;
 import java.util.Map;
 
 @RestController
@@ -18,11 +18,11 @@ public class S3UploadController {
     }
 
     @PostMapping("/presign")
-    public ResponseEntity<Map<String, String>> getPresignedUrl(@RequestBody Map<String, String> body) throws URISyntaxException {
+    public ResponseEntity<Map<String, String>> getPresignedUrl(@RequestBody Map<String, String> body) {
         String fileName = body.get("fileName");
         String fileType = body.get("fileType");
 
-        var result = s3UploadService.generatePresignedUrl(fileName, fileType);
+        PresignedS3Upload result = s3UploadService.generatePresignedUrl(fileName, fileType);
 
         return ResponseEntity.ok(Map.of(
                 "url", result.url().toString(),
