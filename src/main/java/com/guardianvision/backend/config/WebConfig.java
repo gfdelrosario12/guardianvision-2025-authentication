@@ -15,6 +15,7 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
+                                "https://guardian-vision-kkp7d4gui-gladwin-ferdz-del-rosarios-projects.vercel.app",
                                 "http://localhost:5173",
                                 "http://localhost:3000",
                                 "https://guardian-vision.vercel.app"
