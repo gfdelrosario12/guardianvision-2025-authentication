@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Async;
+
 @Service
 public class AlertService {
     private final AlertRepository alertRepo;
@@ -21,6 +23,7 @@ public class AlertService {
         this.patientRepo = patientRepo;
     }
 
+    // Original method remains if you need sync usage
     public Alerts create(Long patientId, Alerts alert) {
         Patient patient = patientRepo.findById(patientId).orElseThrow();
         alert.setPatient(patient);
@@ -28,9 +31,14 @@ public class AlertService {
         if (alert.getTimestamp() == null) {
             alert.setTimestamp(OffsetDateTime.now().toString());
         }
-        // if timestamp is "" (empty string), do nothing (keep it as empty)
 
         return alertRepo.save(alert);
+    }
+
+    @Async
+    public void createAsync(Long patientId, Alerts alert) {
+        create(patientId, alert); // reuse existing method
+        System.out.println("📌 [Async] Alert saved for patient " + patientId);
     }
 
     public List<Alerts> getAllByPatient(Long patientId) {

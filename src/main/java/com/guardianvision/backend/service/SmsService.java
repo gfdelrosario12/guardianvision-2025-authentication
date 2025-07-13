@@ -9,6 +9,8 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
 
+import org.springframework.scheduling.annotation.Async;
+
 @Service
 public class SmsService {
 
@@ -44,4 +46,11 @@ public class SmsService {
             throw e;
         }
     }
+
+    @Async
+    public void sendAlertAsync(String phoneNumber, String location) {
+        sendAlert(phoneNumber, location); // reuse
+        System.out.println("📤 [Async] SMS sent to: " + phoneNumber);
+    }
 }
+
