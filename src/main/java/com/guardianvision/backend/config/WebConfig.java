@@ -14,16 +14,16 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(
-                                "https://guardian-vision-kkp7d4gui-gladwin-ferdz-del-rosarios-projects.vercel.app",
+                        .allowedOriginPatterns(
+                                "https://*.vercel.app",
                                 "http://localhost:5173",
-                                "http://localhost:3000",
-                                "https://guardian-vision.vercel.app"
+                                "http://localhost:3000"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true); // ✅ required for cookie-based auth
+                        .allowCredentials(true);
             }
         };
     }
+
 }
