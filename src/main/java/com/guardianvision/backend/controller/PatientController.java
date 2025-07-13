@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/patients")
+@RequestMapping("/patients")
 @CrossOrigin(
         origins = {"http://localhost:3000", "http://localhost:5173", "https://guardian-vision.vercel.app", "https://guardian-vision-kkp7d4gui-gladwin-ferdz-del-rosarios-projects.vercel.app"},
         allowCredentials = "true"

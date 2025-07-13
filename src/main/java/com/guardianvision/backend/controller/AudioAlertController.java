@@ -18,7 +18,7 @@ import java.util.Map;
         allowCredentials = "true"
 )
 @RestController
-@RequestMapping("/api/audio")
+@RequestMapping("/audio")
 @EnableAsync
 public class AudioAlertController {
 
