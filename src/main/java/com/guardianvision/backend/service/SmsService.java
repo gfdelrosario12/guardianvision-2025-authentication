@@ -35,7 +35,7 @@ public class SmsService {
         try {
             PublishRequest request = PublishRequest.builder()
                     .message(message)
-                    .phoneNumber(phoneNumber)
+                    .phoneNumber("+" + phoneNumber)
                     .build();
 
             PublishResponse result = snsClient.publish(request);
