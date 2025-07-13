@@ -28,13 +28,6 @@ public class CaregiverService {
     }
 
     public Caregiver create(Caregiver caregiver) {
-        String mobile = caregiver.getMobile_number();
-
-        // ✅ Ensure phone number starts with '+' only once
-        if (mobile != null && !mobile.startsWith("+")) {
-            caregiver.setMobile_number("+" + mobile);
-        }
-
         return repo.save(caregiver);
     }
 
