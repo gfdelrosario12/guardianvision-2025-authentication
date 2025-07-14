@@ -15,9 +15,40 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/admins/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers(
+                                // Admin endpoints
+                                "/admins/login",
+                                "/admins/ping",
+                                "/admins",
+
+                                // Caregiver endpoints
+                                "/caregivers/login",
+                                "/caregivers/ping",
+                                "/caregivers",
+
+                                // Patient endpoints
+                                "/patients/login",
+                                "/patients/ping",
+                                "/patients",
+                                "/patients/caregiver/**",
+
+                                // Alerts
+                                "/alerts/patient/**",
+                                "/alerts", // POST
+
+                                // Outages
+                                "/outages/patient/**",
+                                "/outages", // POST
+
+                                // Audio alert endpoint
+                                "/audio/alert",
+
+                                // S3 upload (public presigned request)
+                                "/s3/presign"
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 );
+
         return http.build();
     }
 }
