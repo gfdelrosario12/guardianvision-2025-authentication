@@ -3,6 +3,7 @@
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/config/WebConfig.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/controller/AdministratorController.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/controller/AlertController.java
+/home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/controller/AudioAlertController.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/controller/CaregiverController.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/controller/OutageController.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/controller/PatientController.java
@@ -25,6 +26,8 @@
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/service/OutageService.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/service/PatientService.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/service/S3UploadService.java
+/home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/service/SmsService.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/util/AwsS3Config.java
+/home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/util/JwtCookieUtil.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/util/JwtUtil.java
 /home/gladwin/Documents/Freelance/Guardian Vision/guardianvision-2025-authentication/src/main/java/com/guardianvision/backend/util/PasswordArgon2.java

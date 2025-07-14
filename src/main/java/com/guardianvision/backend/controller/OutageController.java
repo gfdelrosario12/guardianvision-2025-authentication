@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/outages")
+@RequestMapping("/api/outages")
 public class OutageController {
     private final OutageService service;
 

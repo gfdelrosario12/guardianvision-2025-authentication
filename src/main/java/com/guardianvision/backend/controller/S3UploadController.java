@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/s3")
+@RequestMapping("/api/s3")
 public class S3UploadController {
 
     private final S3UploadService s3UploadService;

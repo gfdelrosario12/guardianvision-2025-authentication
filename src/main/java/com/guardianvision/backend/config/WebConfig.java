@@ -15,15 +15,14 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                                "https://guardian-vision.vercel.app", // <- exact match
                                 "http://localhost:5173",
-                                "http://localhost:3000"
+                                "http://localhost:3000",
+                                "https://guardian-vision.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .allowCredentials(true); // ✅ required for cookie-based auth
             }
         };
     }
-
 }

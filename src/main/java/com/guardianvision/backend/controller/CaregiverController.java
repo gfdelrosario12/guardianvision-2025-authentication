@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/caregivers")
+@RequestMapping("/api/caregivers")
 public class CaregiverController {
 
     private final CaregiverService service;
