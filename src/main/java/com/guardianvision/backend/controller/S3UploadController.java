@@ -9,10 +9,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/s3")
-@CrossOrigin(
-        origins = {"http://localhost:3000", "http://localhost:5173", "https://guardian-vision.vercel.app", "https://guardian-vision-kkp7d4gui-gladwin-ferdz-del-rosarios-projects.vercel.app"},
-        allowCredentials = "true"
-)
 public class S3UploadController {
 
     private final S3UploadService s3UploadService;
