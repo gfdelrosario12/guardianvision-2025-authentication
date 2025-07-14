@@ -14,8 +14,8 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns(
-                                "https://*.vercel.app",
+                        .allowedOrigins(
+                                "https://guardian-vision.vercel.app", // <- exact match
                                 "http://localhost:5173",
                                 "http://localhost:3000"
                         )
