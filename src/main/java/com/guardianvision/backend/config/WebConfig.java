@@ -17,11 +17,12 @@ public class WebConfig {
                         .allowedOrigins(
                                 "http://localhost:5173",
                                 "http://localhost:3000",
-                                "https://guardian-vision.vercel.app"
+                                "https://guardian-vision.vercel.app",
+                                "http://54.179.131.197:3000" // ✅ Add this
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true); // ✅ required for cookie-based auth
+                        .allowCredentials(true);
             }
         };
     }
