@@ -104,7 +104,7 @@ public class PatientController {
                     .body(Map.of("message", "Invalid username or password"));
         }
 
-        String token = JwtUtil.generateToken(login.getUsername(), "ADMIN");
+        String token = JwtUtil.generateToken(login.getUsername(), "PATIENT");
 
         JwtCookieUtil.setJwtCookie(response, token);
         return ResponseEntity.ok(Map.of("role", "PATIENT"));

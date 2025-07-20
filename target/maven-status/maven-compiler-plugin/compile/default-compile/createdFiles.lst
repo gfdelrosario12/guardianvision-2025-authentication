@@ -1,6 +1,7 @@
 com/guardianvision/backend/util/PasswordArgon2.class
 com/guardianvision/backend/GuardianVisionApplication.class
 com/guardianvision/backend/entity/Administrator.class
+com/guardianvision/backend/controller/AudioAlertController.class
 com/guardianvision/backend/repository/PatientRepository.class
 com/guardianvision/backend/service/OutageService.class
 com/guardianvision/backend/dto/PatientSummaryDto.class
@@ -10,13 +11,13 @@ com/guardianvision/backend/controller/AdministratorController.class
 com/guardianvision/backend/controller/AlertController.class
 com/guardianvision/backend/repository/OutageRepository.class
 com/guardianvision/backend/controller/OutageController.class
+com/guardianvision/backend/util/JwtCookieUtil.class
+com/guardianvision/backend/service/SmsService.class
 com/guardianvision/backend/entity/Alerts.class
 com/guardianvision/backend/service/S3UploadService$PresignedS3Upload.class
 com/guardianvision/backend/service/AlertService.class
 com/guardianvision/backend/service/PatientService.class
-com/guardianvision/backend/config/WebConfig.class
 com/guardianvision/backend/controller/PatientController.class
-com/guardianvision/backend/config/WebConfig$1.class
 com/guardianvision/backend/util/JwtUtil.class
 com/guardianvision/backend/config/SecurityConfig.class
 com/guardianvision/backend/repository/AdministratorRepository.class

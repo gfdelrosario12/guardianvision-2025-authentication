@@ -1,0 +1,25 @@
+# IDEs
+.idea
+.vscode
+*.iml
+
+# Build artifacts
+build
+out
+
+# Logs
+*.log
+
+# Local environment
+.env
+.env.*
+
+# OS junk
+.DS_Store
+*.swp
+*.tmp
+*.bak
+
+# Version control
+.git
+.gitignore
